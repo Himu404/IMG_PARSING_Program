@@ -27,7 +27,7 @@ This Python program utilizes the Google Vision API to perform Optical Character 
 
 1. Run the program:
    ```bash
-   python main.py
+   OCR_EXCEL.py
 
     The program will process each image in the specified folder and generate parsed_information.xlsx with parsed data.
 
