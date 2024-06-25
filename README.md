@@ -64,10 +64,10 @@ This Python program utilizes the Google Vision API to perform Optical Character 
 
     The program will process each image in the specified folder and generate parsed_information.xlsx with parsed data.
 
-Contributing
+## Contributing
 
 Contributions are welcome! Fork the repository, make your changes, and submit a pull request.
 
-Contact
+## Contact
 
 For questions or suggestions, please contact najmulhaqe164@gmail.com.
