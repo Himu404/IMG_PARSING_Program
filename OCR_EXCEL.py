@@ -16,9 +16,9 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = json_key_path
 client = vision.ImageAnnotatorClient()
 
 # Function to extract and parse information from an image
-def extract_and_parse_image_info(image_path, ws):
+def extract_and_parse_image_info(image_path, ws, serial_number):
     image_name = os.path.basename(image_path)
-    print(f"Processing image: {image_name}")
+    print(f"Processing image: {image_name} (Serial Number: {serial_number})")
 
     # Loads the image into memory
     with io.open(image_path, 'rb') as image_file:
@@ -83,21 +83,24 @@ def extract_and_parse_image_info(image_path, ws):
                 owner_id = line.split(":", 1)[1].strip()
 
         # Print the parsed information to terminal
-        print(f"\nParsed Information: ({image_name})")
-        print(f"First Name: {first_name}")
-        print(f"Last Name: {last_name}")
-        print(f"Address: {address}")
-        print(f"City: {city}")
-        print(f"State: {state}")
-        print(f"Zip: {zip_code}")
-        print(f"E-mail: {email}")
-        print(f"Phone-1: {phones['Phone-1']}")
-        print(f"Phone-2: {phones['Phone-2']}")
-        print(f"Phone-3: {phones['Phone-3']}")
-        print(f"Owner ID: {owner_id}")
+        print(f"\nParsed Information: ({image_name}) (Serial Number: {serial_number})")
+        if first_name or last_name or address or city or state or zip_code or email or phones["Phone-1"] or phones["Phone-2"] or phones["Phone-3"] or owner_id:
+            print(f"First Name: {first_name}")
+            print(f"Last Name: {last_name}")
+            print(f"Address: {address}")
+            print(f"City: {city}")
+            print(f"State: {state}")
+            print(f"Zip: {zip_code}")
+            print(f"E-mail: {email}")
+            print(f"Phone-1: {phones['Phone-1']}")
+            print(f"Phone-2: {phones['Phone-2']}")
+            print(f"Phone-3: {phones['Phone-3']}")
+            print(f"Owner ID: {owner_id}")
 
-        # Write data to Excel worksheet
-        ws.append([first_name, last_name, address, city, state, zip_code, email, phones["Phone-1"], phones["Phone-2"], phones["Phone-3"], owner_id, image_name])
+            # Write data to Excel worksheet
+            ws.append([first_name, last_name, address, city, state, zip_code, email, phones["Phone-1"], phones["Phone-2"], phones["Phone-3"], owner_id, image_name])
+        else:
+            print("No relevant data found.")
 
 # Create a new Excel workbook
 wb = Workbook()
@@ -108,11 +111,13 @@ ws.title = "Parsed Information"
 ws.append(["First Name", "Last Name", "Address", "City", "State", "Zip", "E-mail", "Phone-1", "Phone-2", "Phone-3", "Owner ID", "Image Name"])
 
 # Iterate over all files in the folder
+serial_number = 1
 for filename in os.listdir(folder_path):
     # Check if the file is an image
     if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
         image_path = os.path.join(folder_path, filename)
-        extract_and_parse_image_info(image_path, ws)
+        extract_and_parse_image_info(image_path, ws, serial_number)
+        serial_number += 1
 
 # Save the Excel workbook
 wb.save("parsed_information.xlsx")
